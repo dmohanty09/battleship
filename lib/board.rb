@@ -1,5 +1,3 @@
-require './lib/ship'
-
 class Board
 
 	attr_accessor :grid
@@ -23,7 +21,11 @@ class Board
 	def place_ship(symbol, length)
 		positioned = false
 		while positioned == false
-			positioned = place_horizontal(symbol, length)
+			if Random.rand(2) == 0
+				positioned = place_horizontal(symbol, length)
+			else
+				positioned = place_vertical(symbol, length)
+			end
 		end
 	end
 
@@ -37,6 +39,24 @@ class Board
 				return false
 			else
 				coords << [x_offset, y]
+			end
+		end
+		coords.each do |c|
+			@grid[c[0]][c[1]] = symbol
+		end
+		return true
+	end
+
+	def place_vertical(symbol, length)
+		x = Random.rand(10)
+		y = Random.rand(10 - length)
+		coords = []
+		(0..length-1).each do |offset|
+			y_offset = y + offset
+			if !@grid[x][y_offset].nil?
+				return false
+			else
+				coords << [x, y_offset]
 			end
 		end
 		coords.each do |c|
